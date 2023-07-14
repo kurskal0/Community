@@ -4,7 +4,8 @@ nowcoderProject
 1.项目中所用到的大部分技术栈
         整个技术是构建在SpringBoot上的，其他技术是依托于SpringBoot之上的。SpringBoot只是起到辅助的作用，降低其他技术的使用难度。整个技术的核心是Spring框架，在Spring之上使用了SpringMvc（解决了前后端请求处理交互的问题）、
         Spring Mybatis（可以访问数据库）、Spring Security（用于管理项目中的登录权限等）。SpringMvc、Spring Mybatis、Spring Security构成了项目的基石，项目中几乎所有请求是由他们完成的。 
-        ![image](https://github.com/kurskal0/Community/assets/57366502/cf8a5565-253d-400e-bfe0-7862fed91ad7)
+        ![1](https://github.com/kurskal0/Community/assets/57366502/b38c8cf5-23db-42ce-80ee-d1bc8f60eb59)
+
 
 
 2.权限模块
