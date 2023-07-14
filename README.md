@@ -4,6 +4,8 @@ nowcoderProject
 1.项目中所用到的大部分技术栈
         整个技术是构建在SpringBoot上的，其他技术是依托于SpringBoot之上的。SpringBoot只是起到辅助的作用，降低其他技术的使用难度。整个技术的核心是Spring框架，在Spring之上使用了SpringMvc（解决了前后端请求处理交互的问题）、
         Spring Mybatis（可以访问数据库）、Spring Security（用于管理项目中的登录权限等）。SpringMvc、Spring Mybatis、Spring Security构成了项目的基石，项目中几乎所有请求是由他们完成的。 
+        ![image](https://github.com/kurskal0/Community/assets/57366502/cf8a5565-253d-400e-bfe0-7862fed91ad7)
+
 
 2.权限模块
         应用了Spring Email和SpringMvc中的Interceptor（拦截器），其中拦截器能拦截所有请求，能解决通用的问题，涉及的面比较广、影响的请求比较多要重点关注。权限模块主要开发了注册、登录、退出、状态（在每个页面上怎么去显示登录用户的头像、用户名等）、设置（用户头像、修改密码等）、授权（不同类型的用户访问不同的功能，使用Security实现的）、会话管理（重点需要了解Cookie、session、项目中为什么不用session(主要是考虑分布式部署Session的问题)、不用session是如何解决的问题（把数据存在Redis中，使用了ThreadLocal））等功能。
