@@ -1,0 +1,168 @@
+server:
+  port: 8088
+  servlet:
+    #设置项目根路径
+    context-path: /community
+#关闭thymeleaf模板缓存
+spring:
+  thymeleaf:
+    cache: false
+
+  #配置数据库连接池
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/community?characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Hongkong
+    username: root
+    password: 123456
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      maximum-pool-size: 15
+      minimum-idle: 5
+      idle-timeout: 30000
+
+  # 邮件配置
+  mail:
+    host: smtp.163.com
+    port: 465
+    username: kurskal@163.com
+    password: LGAMMFWQNBMKPQHZ
+    protocol: smtps
+    properties:
+      mail:
+        smtp:
+          ssl:
+            enable: true
+  #线程池配置
+  task:
+    #TaskExecutionProperties 普通线程池 线程执行任务不确定 可由浏览器触发执行
+    execution:
+      pool:
+        core-size: 5 #线程池核心线程数量
+        max-size: 15 #线程池中的线程最大数量
+        queue-capacity: 100 #配置线程池队列(线程够用时，缓冲任务)容量
+    #TaskSchedulingProperties 定时任务线程池 定时启动任务
+    scheduling:
+      pool:
+        size: 5
+  # quartz底层依赖于线程池，底层有默认配置
+  # quartz配置 QuartzProperties
+  quartz:
+    #任务存储方式：持久化到数据库中
+    job-store-type: jdbc
+    #调度器名字
+    scheduler-name: communityScheduler
+    properties:
+      org:
+        quartz:
+          scheduler:
+            #调度器id自动生成
+            instanceId: AUTO
+          jobStore:
+            #任务存储时所用到的类
+            class: org.springframework.scheduling.quartz.LocalDataSourceJobStore
+            #任务驱动
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+            #是否集群
+            isClustered: true
+          threadPool:
+            #使用的线程池
+            class: org.quartz.simpl.SimpleThreadPool
+            #线程池的线程数
+            threadCount: 5
+
+
+  #配置上传文件的大小
+  #  http:
+  #    multipart:
+  #      max-file-size: 10MB
+  #      max-request-size: 10MB
+  #redis配置
+  redis:
+    database: 11
+    host: localhost
+    port: 6379
+    password: 123456
+  #kafka配置
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      # kafka组id
+      group-id: community-consumer-group
+      # 是否自动提交消费者偏移量
+      enable-auto-commit: true
+      auto-commit-interval: 3000
+  #elasticsearch配置
+#  elasticsearch:
+#    uris: http://localhost:9300
+#    username: nowcoder
+#  data:
+#    elasticsearch:
+#      cluster-name: nowcoder
+#      cluster-nodes: 127.0.0.1:9300
+
+
+#mybatis相关配置
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.nowcoder.community.entity
+  configuration:
+    #设置id主键自增
+    use-generated-keys: true
+    #数据库字段名称与类属性名称对应
+    map-underscore-to-camel-case: true
+    use-actual-param-name: true
+
+#logger配置
+logging:
+  level:
+    com:
+      nowcoder:
+        community: debug
+  # 设置logback.xml位置
+  # config: classpath:log/logback.xml
+
+# 自定义网站域名
+community:
+  path:
+    #设置域名
+    domain: http://localhost:8088
+    # 配置文件上传位置
+    upload: d:/work/data/upload
+#
+## wk
+#wk:
+#  image:
+#    command: d:/software/wkhtmltopdf/bin/wkhtmltoimage
+#    storage: d:/work/data/wk-images/
+#
+##七牛云储存配置
+#qiniu:
+#  key:
+#    #访问密钥
+#    access: 6RA-Uus95ZT_1znMrCMD8BpqfjT-K7OKmQTfKB48
+#    secret: kPNnLFz2_tzztKUVpSLm0lYngtuHWyIq5LzTmLIL
+#  bucket:
+#    #存储空间配置
+#    header:
+#      name: community_header
+#      url: http://pvghrij81.bkt.clouddn.com
+#    share:
+#      name: community_share
+#      url: http://pvghvvuzm.bkt.clouddn.com
+
+#caffeine
+#caffeine:
+#  posts:
+#    #缓存大小
+#    max-size: 15
+#    #过期时间，3分钟缓存清除
+#    #缓存数据淘汰策略：一是主动淘汰(数据变化，缓存数据清除)，二是定时淘汰
+#    expire-seconds: 180
+
+# actuator
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        exclude: env,beans
+#        include: *
