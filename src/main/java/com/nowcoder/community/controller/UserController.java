@@ -8,6 +8,7 @@ import com.nowcoder.community.service.UserService;
 import com.nowcoder.community.util.CommunityConstant;
 import com.nowcoder.community.util.CommunityUtil;
 import com.nowcoder.community.util.HostHolder;
+import com.nowcoder.community.util.OSSUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
@@ -54,11 +55,15 @@ public class UserController implements CommunityConstant {
     @Autowired
     private FollowService followService;
 
+    @Autowired
+    private OSSUtil ossUtil;
+
     @RequestMapping(path = "/setting", method = RequestMethod.GET)
     public String getSettingPage(){
         return "/site/setting";
     }
 
+    //
     @RequestMapping(path = "/upload", method = RequestMethod.POST)
     public String uploadHeader(MultipartFile headerImage, Model model){
         if (headerImage == null){
@@ -75,16 +80,25 @@ public class UserController implements CommunityConstant {
         filename = CommunityUtil.generateUUID() + suffix;
         // 确定文件存放路径
         File dest = new File(uploadPath + "/" + filename);
+        // 存入本地
         try {
+            // 将文件存入指定位置
             headerImage.transferTo(dest);
         }catch (IOException e) {
             logger.error("上传文件失败：" + e.getMessage());
             throw new RuntimeException("上传文件失败，服务器发生异常!", e);
         }
+        // 上传到阿里云OSS
+        String headerUrl = ossUtil.uploadFile(filename, dest);
+        System.out.println(headerUrl);
+        if (headerUrl == null) {
+            logger.error("文件上传至云服务器失败！");
+            throw new RuntimeException("文件上传至云服务器失败！");
+        }
         // 更新当前用户头像的路径
         // http://localhost:8088/community/user/header/xxx.png
         User user = hostHolder.getUser();
-        String headerUrl = domain + contextPath + "/user/header/" + filename;
+//        String headerUrl = domain + contextPath + "/user/header/" + filename;
         userService.updateHeader(user.getId(), headerUrl);
 
         return "redirect:/index";
@@ -114,6 +128,7 @@ public class UserController implements CommunityConstant {
 //        return "redirect:/logout";
 //    }
 
+    // 废弃
     // 获取头像。http://localhost:8088/community/user/header/xxx.xx，需要写一个方法用于处理该请求
     @RequestMapping(path = "/header/{filename}", method = RequestMethod.GET)
     public void getHeader(@PathVariable("filename") String filename, HttpServletResponse response){
